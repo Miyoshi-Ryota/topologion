@@ -1,5 +1,5 @@
 mod core;
-use core::r#type::Topology;
+use core::{r#type::Topology, visualizer::visualize_by_graphviz};
 use std::rc::Rc;
 
 fn main() {
@@ -39,14 +39,18 @@ fn main() {
 
     // Connect Distribution Switches to Core Switches
     for i in 0..12 {
-        let distribution_switch_eth = Rc::clone(&topology.devices[240 + i].borrow().nics[40 + i]); // Using interfaces eth41, eth42, ...
+        let distribution_switch_eth1 = Rc::clone(&topology.devices[240 + i].borrow().nics[41]); // Using interfaces eth41, eth42, ...
+
+        let distribution_switch_eth2 = Rc::clone(&topology.devices[240 + i].borrow().nics[42]); // Using interfaces eth41, eth42, ...
 
         // Connect to Core Switch0
         let core_switch0_eth = Rc::clone(&topology.devices[252].borrow().nics[i]); // Using interfaces eth1 to eth12
-        topology.connect(distribution_switch_eth.clone(), core_switch0_eth);
+        topology.connect(distribution_switch_eth1, core_switch0_eth);
 
         // Connect to Core Switch1
         let core_switch1_eth = Rc::clone(&topology.devices[253].borrow().nics[i]); // Using interfaces eth1 to eth12
-        topology.connect(distribution_switch_eth, core_switch1_eth);
+        topology.connect(distribution_switch_eth2, core_switch1_eth);
     }
+
+    println!("{}", visualize_by_graphviz(&topology));
 }

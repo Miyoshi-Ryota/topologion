@@ -3,7 +3,7 @@ use std::rc::{Rc, Weak};
 
 #[derive(Debug)]
 pub struct Device {
-    name: String,
+    pub name: String,
     pub nics: Vec<Rc<Nic>>,
 }
 
